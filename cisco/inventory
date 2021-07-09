@@ -1,0 +1,8 @@
+[switches]
+192.168.50.69
+
+[switches:vars]
+ansible_network_os=ios
+ansible_connection=network_cli
+username=admin
+password=password123!

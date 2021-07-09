@@ -1,0 +1,13 @@
+---
+- name: show current variables for network devices
+  hosts: switches
+  gather_facts: no
+  tasks:
+    - name: show key variables
+      debug:
+        msg: >
+          host: {{ inventory_hostname }},
+          connection: {{ ansible_connection }},
+          nos: {{ ansible_network_os }},
+          user: {{ ansible_user }},
+          pass: {{ ansible_ssh_pass }}

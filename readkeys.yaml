@@ -1,0 +1,19 @@
+---
+- name: read user ssh keys
+  hosts: fedora
+  become: yes
+  vars:
+    users:
+    - student
+    - ansible
+  tasks:
+    - name: create users
+      user:
+        name: "{{ item }}"
+      loop: "{{ users }}"
+    - name: add authorized keys
+      authorized_key:
+        user: "{{ item }}"
+        key: "{{ lookup('file', '/home/' + item + '/.ssh/id_rsa.pub') }}"
+      loop: "{{ users }}"
+      delegate_to: localhost

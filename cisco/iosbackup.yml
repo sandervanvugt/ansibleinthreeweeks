@@ -1,0 +1,8 @@
+---
+- name: backup test
+  hosts:
+  - all
+  tasks:
+  - name: backup the running config
+    ios_config:
+      backup: yes

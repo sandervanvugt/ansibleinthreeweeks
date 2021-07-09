@@ -1,0 +1,44 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: False
+  vars:
+    region: us-west-2
+    image: ami-03d5c68bab01f3496
+    id: testvm
+    sec_group: "{{ id }}-sec"
+    key_name: ansibleawskey
+  tasks:
+    - name: upload key
+      ec2_key:
+        name: "{{ key_name }}"
+        key_material: "{{ lookup('file', '/home/ansible/.ssh/id_rsa.pub') }}"
+        region: "{{ region }}"
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+    - name: create security group
+      ec2_group:
+        name: "{{ sec_group }}"
+        description: "sec group for app {{ id }}"
+        region: "{{ region }}"
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+        rules:
+          - proto: tcp
+            ports:
+              - 22
+            cidr_ip: 0.0.0.0/0
+            rule_desc: allow all SSH traffic
+      register: secgroup
+    - name: provision instance(s)
+      ec2:
+        aws_access_key: "{{ aws_access_key }}"
+        aws_secret_key: "{{ aws_secret_key }}"
+        key_name: "{{ key_name }}"
+        id: "{{ id }}"
+        group_id: "{{ secgroup.group_id }}"
+        image: "{{ image }}"
+        instance_type: t2.micro
+        region: "{{ region }}"
+        wait: true
+        count: 1
