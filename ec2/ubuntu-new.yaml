@@ -1,0 +1,14 @@
+- name: create an ubuntu instance on EC2
+  hosts: localhost
+  tasks:
+
+  - name: start the instance
+    ec2:
+      image: ami-0cf1ef0f7d7421ea7
+      key_name: instancekey
+      region: us-west-2
+      aws_access_key: "{{ aws_access_key }}"
+      aws_secret_key: "{{ aws_secret_key }}"
+      instance_type: t2.nano
+      # key_name: june20182
+      # group: all-open

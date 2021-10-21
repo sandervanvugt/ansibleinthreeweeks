@@ -4,7 +4,7 @@
   become: no
   tasks:
   - name: Gather information about all instances
-    community.aws.ec2_instance_info:
+    ec2_instance_info:
       aws_access_key: "{{ aws_access_key }}"
       aws_secret_key: "{{ aws_secret_key }}"
       region: us-west-2
