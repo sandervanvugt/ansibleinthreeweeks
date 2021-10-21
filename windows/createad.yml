@@ -1,0 +1,19 @@
+---
+- name: create an AD domain
+  hosts: win
+  tasks: 
+    - name: create a domain
+      win_domain:
+        create_dns_delegation: no
+        database_path: C:\Windows\NTDS
+        dns_domain_name: EXAMPLE.COM
+        domain_mode: Win2012R2
+        domain_netbios_name: EXAMPLE
+        forest_mode: Win2012R2
+        safe_mode_password: P@$$word123
+        sysvol_path: C:\Windows\SYSVOL
+      register: domain_install
+    - name: Rebooting
+      win_reboot:
+        msg: Rebooting
+      when: domain_install.reboot_required
