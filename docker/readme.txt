@@ -1,0 +1,1 @@
+there is a nice attempt to run docker on centos7 as well as ubuntu in this project directory, but it fails. new-docker shows how to build up a playbook from scratch, starting with command and shell to make sure that is does work, which can be changed to more specific modules after verifying that it all works.

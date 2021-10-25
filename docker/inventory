@@ -1,0 +1,11 @@
+[rhfamily]
+centos7
+rhel84
+tower
+
+[nonrhfamily]
+ubuntu
+
+[servers:children]
+nonrhfamily
+rhfamily

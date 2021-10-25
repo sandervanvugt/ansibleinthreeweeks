@@ -1,0 +1,55 @@
+- name: developing docker o ubuntu setup
+  hosts: ubuntu
+  tasks:
+  - name: run apt update
+    command: apt-get update
+  - name: install prereq packages
+    package:
+      name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg-agent
+      - software-properties-common
+      - pip
+      state: latest
+  - name: import repo gpg key
+    shell: curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
+  - name: add repo
+    shell: add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  - name: apt update
+    command: apt-get update
+  - name: install packages
+    package:
+      name: 
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      state: latest
+  - debug:
+     msg: if you come this far, change all command and shell modules for something better
+  tags: setupdocker
+
+- name: running the docker container
+  hosts: ubuntu
+  tasks:
+  - name: install docker pip module
+    pip:
+      name: docker
+  - name: start and enable docker daemon
+    service:
+      name: docker
+      enabled: yes
+      state: started
+  - name: create container
+    docker_container:
+      name: mynginx
+      image: nginx
+      state: started
+  - name: generate a list of running containers
+    command: docker ps
+    register: dockerps
+  - name: show list of running containers
+    debug:
+      var: dockerps.stdout
+  tags: rundocker
