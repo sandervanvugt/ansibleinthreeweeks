@@ -4,22 +4,25 @@
   hosts: localhost
   tasks:
 
-  - name: Create resource group
+  - name: Remove resource group
     azure_rm_resourcegroup:
       name: Testing
       location: westus
+      state: absent
 
-  - name: Create storage account
+  - name: Remove storage account
     azure_rm_storageaccount:
       resource_group: Testing
       name: testaccount001
       account_type: Standard_LRS
+      state: absent
   
-  - name: Create virtual network
+  - name: Remove virtual network
     azure_rm_virtualnetwork:
       resource_group: Testing
       name: testvn001
       address_prefixes: "10.10.0.0/16"
+      state: absent
   
   - name: Add subnet
     azure_rm_subnet:
@@ -27,17 +30,20 @@
       name: subnet001
       address_prefix: "10.10.0.0/24"
       virtual_network: testvn001
+      state: absent
   
-  - name: Create public ip
+  - name: Remove public ip
     azure_rm_publicipaddress:
       resource_group: Testing
       allocation_method: Static
       name: publicip001
+      state: absent
   
-  - name: Create security group that allows SSH
+  - name: Remove security group that allows SSH
     azure_rm_securitygroup:
       resource_group: Testing
       name: secgroup001
+      state: absent
       rules:
         - name: SSH
           protocol: Tcp
@@ -46,7 +52,7 @@
           priority: 101
           direction: Inbound
   
-  - name: Create NIC
+  - name: Remove NIC
     azure_rm_networkinterface:
       resource_group: Testing
       name: testnic001
@@ -54,8 +60,9 @@
       subnet: subnet001
       public_ip_name: publicip001
       security_group: secgroup001
-  
-  - name: Create virtual machine
+      state: absent
+
+  - name: Remove virtual machine
     azure_rm_virtualmachine:
       resource_group: Testing
       name: testvm001
@@ -66,6 +73,7 @@
       admin_username: admin
       admin_password: Password!
       network_interfaces: testnic001
+      state: absent
       image:
         offer: CentOS
         publisher: OpenLogic
