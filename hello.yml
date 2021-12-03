@@ -1,8 +1,0 @@
----
-- name: demonstrate lookup template
-  hosts: localhost
-  vars:
-    name: lisa
-  tasks:
-    - debug:
-        msg: "{{ lookup('template', 'mytemplate.j2') }}"
