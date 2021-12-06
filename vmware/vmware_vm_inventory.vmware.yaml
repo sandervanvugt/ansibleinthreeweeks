@@ -1,0 +1,7 @@
+plugin: vmware_vm_inventory
+strict: False
+hostname: 192.168.29.160
+username: administrator@vsphare.local
+password: P@ssw0rd!
+validate_certs: False
+with_tags: True
