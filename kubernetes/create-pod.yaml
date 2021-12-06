@@ -7,7 +7,7 @@
       k8s:
         state: present
         definition:
-        apiVersion: v1
+        api_version: v1
         kind: Pod
         metadata:
             name: "utilitypod-1"
