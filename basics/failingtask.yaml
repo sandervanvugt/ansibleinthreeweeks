@@ -1,0 +1,8 @@
+---
+name: demonstrate failing tasks
+hosts: all
+tasks:
+- name: creating users the wrong way
+  command: useradd anna
+- debug:
+    msg: run me again and see if you get here
