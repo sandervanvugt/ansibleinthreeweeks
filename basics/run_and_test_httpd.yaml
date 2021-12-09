@@ -1,0 +1,22 @@
+---
+- name: install start and enable httpd
+  gather_facts: false
+  hosts: rocky
+  tasks:
+  - name: install package
+    package:
+      name: httpd
+      state: latest
+  - name: start and enable service
+    service:
+      name: httpd
+      state: started
+      enabled: yes
+
+- name: test httpd accessibility
+  become: False
+  hosts: localhost
+  tasks:
+  - name: test httpd access
+    uri:
+      url: http://rocky

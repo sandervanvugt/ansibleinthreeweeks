@@ -1,0 +1,3 @@
+mypackage: nmap
+myftpservice: vsftpd
+myfileservice: smb

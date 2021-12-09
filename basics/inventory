@@ -1,12 +1,8 @@
-control.example.com
-ansible1.example.com
-ansible2.example.com
-
 [lamp]
-ansible1.example.com
+rocky
 
 [file]
-ansible2.example.com
+ubuntu
 
 [nodes:children]
 lamp

@@ -1,0 +1,9 @@
+---
+- name: using a variable include file
+  hosts: rocky
+  vars_files: myvars
+  tasks:
+  - name: install package
+    yum:
+      name: "{{ mypackage }}"
+      state: latest
