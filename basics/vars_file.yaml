@@ -1,7 +1,7 @@
 ---
 - name: using a variable include file
   hosts: rocky
-  vars_files: myvars
+  vars_files: myvars.yaml
   tasks:
   - name: install package
     yum:
