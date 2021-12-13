@@ -1,0 +1,12 @@
+---
+# this fails on SMB devices
+- name: backup test
+  hosts:
+  - all
+  tasks:
+  - name: showing version
+    ios_command:
+      commands:
+      - show version
+          
+

@@ -1,0 +1,18 @@
+- name: Gather Facts
+  gather_facts: no
+  hosts: all
+
+  tasks:
+    ###
+    # Collect data
+    #
+    - name: CISCOSMB - Gather Facts - subset hardware + interfaces
+      community.ciscosmb.facts:
+        gather_subset:
+          - hardware
+          - interfaces
+
+    - name: diag3
+      debug:
+        msg: "{{ ansible_facts }}"
+

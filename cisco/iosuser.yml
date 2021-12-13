@@ -1,0 +1,12 @@
+---
+# this fails on IOS devices with a false positive result
+- name: user test
+  hosts:
+  - all
+  vars:
+  - new_password: cisco
+  tasks:
+  - name: Add a user specifying password type
+    ios_user:
+      name: anna
+
