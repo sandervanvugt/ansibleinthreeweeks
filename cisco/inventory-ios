@@ -1,0 +1,17 @@
+all:
+  vars:
+    gather_facts: no  
+
+    ansible_connection: network_cli
+    ansible_ssh_user: admin
+    ansible_ssh_pass: password123!
+
+  hosts:
+    switch1:
+      ansible_host: 192.168.52.250
+      ansible_hostname: switchd7bfcc
+      ansible_network_os: ios
+    switch2:
+      ansible_host: 192.168.52.251
+      ansible_hostname: switchbcc93c
+      ansible_network_os: ios
