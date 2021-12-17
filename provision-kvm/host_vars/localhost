@@ -1,0 +1,14 @@
+---
+vms:
+- name: cl7-control1
+  memory: 1024
+  vcpu: 2
+  network: default
+- name: cl7-worker1
+  memory: 512
+  vcpu: 2
+  network: default
+- name: cl7-worker2
+  memory: 512
+  vcpu: 2
+  network: default
