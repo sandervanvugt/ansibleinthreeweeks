@@ -14,9 +14,9 @@
       name: httpd
   - name: Copying file into home
     copy:
-      src: /root/ws1/index.html
-      dest: /tmp
-  - name: Re-create a redis container
+      content: hello 
+      dest: /tmp/index.html
+  - name: create an http container
     podman_container:
       name: testhttpd
       image: httpd
