@@ -1,0 +1,29 @@
+---
+# this is version 0.1
+# use ansible-galaxy collection install containers.podman before running
+- hosts: rocky
+  collections:
+  - containers.podman
+  tasks:
+  - name: installing podman
+    package:
+      name: "podman"
+      state: present
+  - name: Pull an image
+    podman_image:
+      name: httpd
+  - name: Copying file into home
+    copy:
+      src: /root/ws1/index.html
+      dest: /tmp
+  - name: Re-create a redis container
+    podman_container:
+      name: testhttpd
+      image: httpd
+      state: started
+      detach: true
+      exposed_ports:
+        - 80
+      ports:
+        - 4444:80
+      volumes: /tmp/:/usr/local/apache2/htdocs/
