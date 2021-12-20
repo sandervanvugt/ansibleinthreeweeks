@@ -1,6 +1,7 @@
 ---
 - name: install roles
   hosts: localhost
+  gather_facts: no
   become: true
   tasks:
   - command: ansible-galaxy role install geerlingguy.containerd
