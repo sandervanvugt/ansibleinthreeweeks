@@ -1,19 +1,12 @@
 ---
-- name: install roles
-  hosts: localhost
-  gather_facts: no
-  become: true
-  tasks:
-  - command: ansible-galaxy role install geerlingguy.containerd
-
 - name: setup a kube cluster on Ubuntu
   hosts: "{{ kubehost }}"
-  ignore_errors: true
   tasks:
   - debug:
       msg: Run this playbook using -e kubehost=hostname to define the name of the host you want to install. The kubehost must run Ubuntu.
   - name: check if we need to install containerd
     shell: systemctl is-active containerd
+    ignore_errors: true
     register: isactive
   - include_role:
       name: geerlingguy.containerd
