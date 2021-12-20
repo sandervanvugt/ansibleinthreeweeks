@@ -1,6 +1,7 @@
 ---
 - name: setup a kube cluster on Ubuntu
   hosts: "{{ kubehost }}"
+  ignore_errors: true
   tasks:
   - debug:
       msg: Run this playbook using -e kubehost=hostname to define the name of the host you want to install. The kubehost must run Ubuntu.
@@ -89,6 +90,7 @@
   tags: setup_local
 
 - name: install the cluster
+  ignore_errors: true
   hosts: "{{ kubehost }}"
   tasks:
   - name: check if we already have a cluster
@@ -113,6 +115,8 @@
     file: 
       name: /home/ansible/.kube
       state: directory
+      owner: ansible
+      group: ansible
 
 - name: fetch config file from remote host to ansible control host
   hosts: "{{ kubehost }}"
@@ -121,7 +125,7 @@
   - name: copying client access file from the managed host
     fetch: 
       src: /etc/kubernetes/admin.conf 
-      dest: ~/.kube/config
+      dest: /home/ansible/.kube/config
       flat: True
 
 - name: changing permission mode
@@ -138,6 +142,7 @@
 - name: setting up networking and removing taint from kube control
   become: False
   hosts: localhost
+  ignore_errors: true
   tasks:
   - name: checking if we need to install networking
     command: kubectl get ns tigera-operator
