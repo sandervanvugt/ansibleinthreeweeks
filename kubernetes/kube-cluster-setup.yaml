@@ -3,7 +3,7 @@
   hosts: "{{ kubehost }}"
   tasks:
   - debug:
-      msg: Run this playbook using -e kubehost=hostname to define the name of the host you want to install. The kubehost must run Ubuntu.
+      msg: Run this playbook using -e kubehost=hostname to define the name of the host you want to install. The kubehost must run Ubuntu. 
   - name: check if we need to install containerd
     shell: systemctl is-active containerd
     ignore_errors: true
@@ -75,6 +75,7 @@
 
 - name: set up localhost as a Kubernetes client
   hosts: localhost
+  gather_facts: false
   become: True
   tasks:
   - name: setting up ansible control host dependencies
@@ -85,12 +86,13 @@
     - openshift
   - name: fetch kubectl
     shell: curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-  - name: install kubect
+  - name: install kubectl
     command: install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
   tags: setup_local
 
 - name: install the cluster
   ignore_errors: true
+  gather_facts: false
   hosts: "{{ kubehost }}"
   tasks:
   - name: check if we already have a cluster
@@ -105,6 +107,7 @@
 
 - name: configure the client
   hosts: localhost
+  gather_facts: false
   become: True
   tasks:
   - debug:
@@ -120,6 +123,7 @@
 
 - name: fetch config file from remote host to ansible control host
   hosts: "{{ kubehost }}"
+  gather_facts: false
   become: True
   tasks:  
   - name: copying client access file from the managed host
@@ -130,6 +134,7 @@
 
 - name: changing permission mode
   hosts: localhost
+  gather_facts: false
   become: True
   tasks:
   - name: changing permissions mode
@@ -142,6 +147,7 @@
 - name: setting up networking and removing taint from kube control
   become: False
   hosts: localhost
+  gather_facts: false
   ignore_errors: true
   tasks:
   - name: checking if we need to install networking
@@ -167,4 +173,7 @@
     when: calico.rc != 0
   - name: remove taint from control node
     command: kubectl taint nodes --all node-role.kubernetes.io/master-
+  - name: completed
+    debug:
+      msg: the Kubernetes AiO cluster setup is not completed! Run kubectl get all to verify
   tags: finishing
