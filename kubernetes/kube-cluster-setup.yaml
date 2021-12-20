@@ -1,4 +1,10 @@
 ---
+- name: install roles
+  hosts: localhost
+  become: true
+  tasks:
+  - command: ansible-galaxy role install geerlingguy.containerd
+
 - name: setup a kube cluster on Ubuntu
   hosts: "{{ kubehost }}"
   ignore_errors: true
