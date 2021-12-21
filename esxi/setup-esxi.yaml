@@ -1,0 +1,41 @@
+---
+- name: ESXi test
+  collections:
+  - community.vmware
+  vars:
+  - esxi_hostname: 192.168.29.178
+  - vcenter_hostname: 192.168.29.178
+  - vcenter_username: root
+  - vcenter_password: P@ssw0rd!
+  hosts: esxi
+  tasks:
+  - vmware_guest:
+      validate_certs: false
+      hostname: "{{ vcenter_hostname }}"
+      username: "{{ vcenter_username }}"
+      password: "{{ vcenter_password }}"
+      folder: /ha-datacenter/vm/
+      name: test_vm_0001
+      state: poweredon
+      guest_id: centos64Guest
+      # This is hostname of particular ESXi server on which user wants VM to be deployed
+      #esxi_hostname: "{{ esxi_hostname }}"
+      disk:
+      - size_gb: 10
+        type: thin
+        datastore: datastore1
+      hardware:
+        memory_mb: 512
+        num_cpus: 4
+        scsi: paravirtual
+      networks:
+      - name: VM Network
+        mac: aa:bb:dd:aa:00:14
+        ip: 10.10.10.100
+        netmask: 255.255.255.0
+        device_type: vmxnet3
+      wait_for_ip_address: true
+      wait_for_ip_address_timeout: 600
+    delegate_to: localhost
+    register: deploy_vm
+

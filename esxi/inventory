@@ -1,0 +1,6 @@
+[esxi]
+192.168.29.178
+
+[esxi:vars]
+ansible_connection=ssh
+ansible_user=root
