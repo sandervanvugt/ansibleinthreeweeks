@@ -1,0 +1,33 @@
+---
+- name: map test
+  hosts: localhost
+  become: no
+  vars:
+    names: [ {
+        "first": "anna",
+        "address": {
+            "city": "Breda",
+            "country": "NL"
+	    }
+        },
+	{
+        "first": "denise",
+        "address": {
+            "city": "San Francisco",
+            "country": "USA"
+	    }
+        },
+	{
+        "first": "sharon",
+        "address": {
+            "city": "Mombasa",
+            "country": "kenya"
+        } 
+        
+      }]
+  gather_facts: no
+  tasks:
+  - debug:
+          #msg: "{{ item  }} lives in {{ names | map(attribute='address') | map(attribute='city') | flatten }}" 
+          msg: "{{ item }} lives in {{ item.address.city }}"
+    loop: "{{ names | map(attribute='first') | flatten }}"

@@ -1,0 +1,11 @@
+---
+- name: creating users
+  hosts: all
+  tasks:
+  - name: create users
+    user:
+      name: "{{ item.key }}"
+      shell: "{{ item.value.shell }}"
+      comment: "{{ item.value.comment }}"
+      groups: "{{ item.value.groups }}"
+    loop: "{{ users | dict2items }}"

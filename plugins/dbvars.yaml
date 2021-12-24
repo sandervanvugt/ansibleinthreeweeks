@@ -1,0 +1,9 @@
+dbuserperms:
+- username: linda
+  dbaccess:
+  - books
+  - videos
+- username: anna
+  dbaccess:
+  - staff
+  - addresses

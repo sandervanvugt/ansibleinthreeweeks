@@ -1,0 +1,8 @@
+---
+- name: testing fileglob
+  hosts: all
+  tasks:
+  - name: testing fileglob
+    debug:
+      msg: "{{ item }}" 
+    loop: "{{ query('fileglob', '~/.*') }}"

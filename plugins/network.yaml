@@ -1,0 +1,42 @@
+---
+- name: exploring network plugins and filters
+  hosts: all
+  vars:
+    addresses:
+    - 1.2.3.4/24
+    - 10.0.0.0/8
+    net_mask: "{{ ansible_default_ipv4.network }}/{{ ansible_default_ipv4.netmask }}"
+  tasks:
+  - name: print IP address
+    debug:
+      msg: the IP address is {{ ansible_facts['default_ipv4'] }}
+  - name: show if this is a valid IP address
+    debug:
+      msg: "{{ ansible_facts['default_ipv4']['address'] | ipaddr }}"
+  - name: ths happens if the variable does not contain a valid IP address
+    debug:
+      msg: "{{ ansible_facts['default_ipv4'] | ipaddr }}"
+  - name: now lets check out the netmask
+    debug:
+      msg: "{{ net_mask | ipaddr('netmask') }}"
+  - name: net is used to convert netmask to CIDR notation
+    debug:
+      msg: "{{ net_mask | ipaddr('net') }}"
+  - name: host/prefix will filter out only valid host IP addresses and skip network addresses from a list in 1.1.1.1/24 format
+    debug:
+      msg: "{{ addresses | ipaddr('host/prefix') }}"
+  - name: or size to show available size in this specific network
+    debug:
+      msg: "{{ ansible_facts['default_ipv4']['network'] | ipaddr('size') }}"
+  - name: rewriting an IPv4 address to IPv6
+    debug:
+      msg: "{{ addresses | ipv4('ipv6') }}"
+  - name: and how about converting IP addresses to hex format
+    debug:
+      msg: "{{ ansible_facts['default_ipv4']['address'] | ip4_hex }}"
+  - name: or int format
+    debug:
+      msg: "{{ ansible_facts['default_ipv4']['address'] | ipaddr('int') }}"
+  - name: an how about finding available IP addresses in a range
+    debug:
+      msg: "{{ '193.179.99.8/27' | ipaddr('range_usable') }}"

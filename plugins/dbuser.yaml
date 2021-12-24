@@ -1,0 +1,14 @@
+---
+- name: sample of adding users to DBs provided as subelement
+  hosts: localhost
+  gather_facts: no
+  become: no
+  vars_files:
+  - dbvars.yaml
+  tasks:
+  - name: adding users to a database
+    debug:
+      msg: |
+        adding user "{{ item.0.username }}"
+        granting permissions "{{ item.1 }}.*:ALL"
+    loop: "{{ dbuserperms | subelements('dbaccess') }}"

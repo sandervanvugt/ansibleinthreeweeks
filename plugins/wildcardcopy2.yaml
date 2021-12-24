@@ -1,0 +1,9 @@
+---
+- name: copying with a wildcard
+  hosts: ansible2
+  tasks:
+  - name: copying with a wildcard
+    copy:
+      src: "{{ item }}"
+      dest: /tmp
+    loop: "{{ query('fileglob', '~/testfiles/*') }}"

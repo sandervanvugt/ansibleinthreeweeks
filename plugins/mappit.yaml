@@ -1,0 +1,10 @@
+---
+- name: map test
+  hosts: localhost
+  become: no
+  vars_files:
+  - addresses.json
+  gather_facts: no
+  tasks:
+  - debug:
+      msg: "{{ names | map(attribute='first')}} lives in {{ names | map(attribute='address') | map(attribute='city')}}"
