@@ -1,9 +1,25 @@
 ---
+- name: install role if necessary
+  hosts: localhost
+  gather_facts: no
+  remote_user: ansible
+  become: no
+  tasks:
+  - name: check if containerd role is present
+    command: ansible-galaxy role list
+    register: haverole
+  - debug:
+      var: haverole
+  - name: install containerd role if required
+    command: ansible-galaxy install geerlingguy.containerd
+    when: not "containerd" in haverole.stdout
+  tags: installrole
+
 - name: setup a kube cluster on Ubuntu
   hosts: "{{ kubehost }}"
   tasks:
   - debug:
-      msg: Run this playbook using -e kubehost=hostname to define the name of the host you want to install. The kubehost must run Ubuntu. 
+      msg: running these tasks on {{ ansible_hostname }}
   - name: check if we need to install containerd
     shell: systemctl is-active containerd
     ignore_errors: true
@@ -175,5 +191,5 @@
     command: kubectl taint nodes --all node-role.kubernetes.io/master-
   - name: completed
     debug:
-      msg: the Kubernetes AiO cluster setup is not completed! Run kubectl get all to verify
+      msg: the Kubernetes AiO cluster setup is now completed! Run kubectl get all to verify
   tags: finishing
