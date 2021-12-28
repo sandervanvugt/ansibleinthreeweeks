@@ -1,0 +1,10 @@
+---
+- name: wiebenik
+  hosts: all
+  tasks:
+  - name: run a windows command
+    win_command: whoami.exe
+    register: wiebenik
+  - name: show the result
+    debug:
+      var: wiebenik.stdout
