@@ -1,0 +1,81 @@
+---
+- name: setup an initial config with one or more remote hosts
+  hosts: localhost
+  gather_facts: no
+  become: yes
+  vars:
+  - hostnames:
+      kubuntu:
+        hostname: kubuntu
+        fqdn: kubuntu.example.com
+        ipaddress: "192.168.29.182"
+      dummy:
+        hostname: dummy
+        fqdn: kubuntu.example.com
+        ipaddress: "192.168.29.183"
+  tasks:
+  - debug:
+      var: item.value.ipaddress
+    with_dict: "{{ hostnames }}"
+  - name: setup host name resolving
+    lineinfile:
+      path: /etc/hosts
+      line: "{{ item.value.ipaddress }} {{ item.value.fqdn }} {{ item.value.hostname }}"
+    with_dict: "{{ hostnames }}"
+  - name: create inventory
+    lineinfile:
+      path: inventory
+      create: yes
+      line: "{{ item.value.hostname }}"
+    with_dict: "{{ hostnames }}"
+  - name: create ansible.cfg
+    blockinfile:
+      path: ansible.cfg
+      create: yes
+      block: |
+        [defaults]
+        host_key_checking = false
+  tags: setuplocal
+
+- name: set up an ansible user account on the remote hosts
+  hosts: all
+  gather_facts: yes
+  tasks:
+  - name: setup Ubuntu  
+    block:
+    - user:
+        name: ansible
+        state: present
+    - name: set a password in a not so elegant but efficient way
+      shell: echo "ansible:password | chpasswd"
+    remote_user: student
+    when: ansible_distribution == "Ubuntu"
+  - name: setup Rocky
+    block:
+    - user:
+        name: ansible
+        state: present
+    - name: set a password
+      shell: echo password | passwd --stdin ansible
+    remote_user: root
+    when: ansible_distribution == "Rocky"
+  tags: setupremoteuser
+
+- name: completing remote user setup
+  hosts: all
+  tasks:
+  - name: file
+    file:
+      path: /home/ansible/.ssh
+      state: directory
+      mode: '0600'
+  - name: copy ssh key
+    copy:
+      src: /home/ansible/.ssh/id_rsa.pub
+      dest: /home/ansible/.ssh/authorized_keys
+  - name: setup privilege escalation
+    lineinfile:
+      path: /etc/sudoers.d/ansible
+      create: yes
+      line: ansible ALL=(ALL) NOPASSWD: ALL
+      validate: /usr/sbin/visudo -cf %s
