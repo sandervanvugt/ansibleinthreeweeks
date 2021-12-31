@@ -1,0 +1,11 @@
+---
+- name: create cgroups
+  hosts: localhost
+  become: yes
+  tasks:
+  - name: install required software
+    yum:
+      name: libcgroup-tools
+      state: latest
+  - name: create the cgroups
+    command: cgcreate -a ansible:ansible -t ansible:ansible -g cpuacct,memory,pids:ansible_profile

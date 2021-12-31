@@ -1,0 +1,34 @@
+---
+- name: install webserver
+  hosts: ansible2
+  gather_facts: no
+  tasks:
+  - name: install httpd
+    yum:
+      name: httpd
+      state: latest
+  - name: create index.html
+    copy:
+      content: welcome to this webserver
+      dest: /var/www/html/index.html
+  - name: start and enable
+    service:
+      name: httpd
+      state: started
+      enabled: yes
+  - name: open firewall
+    firewalld:
+      service: "{{ item }}"
+      state: enabled
+      permanent: yes
+      immediate: yes
+    loop:
+    - http
+    - https
+
+- name: use url lookup plugin to test access
+  hosts: localhost
+  gather_facts: no
+  tasks:
+  - debug:
+      msg: ansible2 shows {{ lookup('url', 'http://ansible2') }}

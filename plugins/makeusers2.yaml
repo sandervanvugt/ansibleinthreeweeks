@@ -1,0 +1,12 @@
+- name: populate users from file
+  hosts: all
+  gather_facts: no
+  tasks:
+  - name: create remote user
+    vars:
+      password: "{{ lookup('password', 'credentials/' + item + 'length=9') }}"
+    user:
+      name: "{{ item }}"
+      password: "{{ password | password_hash('sha512') }}"
+      update_password: on_create
+    loop: "{{ query('lines','cat users.txt') }}"

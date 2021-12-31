@@ -1,0 +1,11 @@
+---
+- name: use templates to provide the right language
+  hosts: all
+  vars:
+    language: "{{ lookup('env','LANG') | default('en_US.UTF-8') }}"
+  tasks:
+  - name: install motd in the right language
+    copy:
+      content: "{{ lookup('template','motd.' + language + '.j2') }}"
+      dest: /etc/motd
+

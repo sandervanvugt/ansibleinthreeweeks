@@ -1,0 +1,28 @@
+---
+- name: test variable types
+  hosts: localhost
+  become: no
+  vars:
+  - car: mercedes
+  - number: 10
+  - sunny: True
+  - rainy: true
+  tasks:
+  - name: testing string
+    debug:
+      msg: car is a string
+    when: car == "mercedes"
+  - name: testing integer
+    debug:
+      msg: number is an integer
+    when: number == 10
+  - name: testing boolean
+    debug:
+      msg: sunny is a boolean
+    when: sunny
+  - name: testng boolean case
+    assert:
+      that: rainy
+      success_msg: rainy is a boolean
+      fail_msg: rainy is not a boolean
+

@@ -1,0 +1,10 @@
+---
+- name: remove users from users.txt
+  hosts: all
+  tasks:
+  - name: remove users
+    user:
+      name: "{{ item }}"
+      state: absent
+      force: yes
+    loop: "{{ query('lines','cat users.txt') }}"

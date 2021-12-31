@@ -1,0 +1,11 @@
+---
+- name: checking out lines and pipes lookup plugins
+  hosts: localhost
+  gather_facts: no
+  tasks:
+  - name: print the first line of any file
+    debug:
+      msg: "{{ item[0] }}"
+    loop:
+    - "{{ query('lines', 'cat /etc/hosts') }}"
+    - "{{ query('lines', 'cat /etc/passwd') }}"

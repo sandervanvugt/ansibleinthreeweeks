@@ -1,0 +1,38 @@
+---
+- name: showing map
+  hosts: all
+  gather_facts: no
+  become: yes
+  vars:
+  - basedir: /var/www/html
+  tasks:
+  - name: install httpd
+    yum:
+      name: httpd
+      state: latest
+  - name: showing basedir
+    debug:
+      var: basedir
+  - name: showing files in basedir
+    find:
+      paths: "{{ basedir }}"
+      recurse: yes
+    register: basedir_files
+  - name: showing current variable contents to understand why we need map
+    debug:
+      var: basedir_files
+  - name: show files based on map attribute path without list - will show error
+    set_fact:
+      webfiles: "{{ basedir_files['files'] | map(attribute='path') }}"
+  - debug:
+      var: webfiles
+  - name: show files based on map attribute with list
+    set_fact:
+      webfileslist: "{{ basedir_files['files'] | map(attribute='path') | list }}"
+  - debug:
+      var: webfileslist
+  - name: now that we know that the list filter is mandatory, show relative file name
+    set_fact:
+      webfilesrelative: "{{ basedir_files['files'] | map('relpath', basedir) | list }}"
+  - debug:
+      var: webfilesrelative
