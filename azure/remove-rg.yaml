@@ -1,0 +1,13 @@
+- name: remove azure stuff
+  ignore_errors: True
+  gather_facts: false
+  hosts: localhost
+  tasks:
+
+  - name: Remove resource group
+    azure_rm_resourcegroup:
+      name: Testing
+      force_delete_nonempty: yes
+      location: westus
+      state: absent
+
